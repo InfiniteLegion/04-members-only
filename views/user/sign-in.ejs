@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Sign in</title>
+</head>
+<body>
+    <div class="main-wrapper">
+        <%- include('../partials/navbar') %>
+
+        <div class="content-wrapper">
+            <div class="user-form">
+                <h2>Sign in</h2>
+
+                <form class="form" action="/user/log-in" method="post">
+                    <% if (locals.error && typeof locals.error !== "undefined") { %>
+                        <p class="form-error"><%= error %></p>
+                    <% } %>
+
+                    <div class="input-block">
+                        <label for="login">Login</label>
+                        <input type="text" id="login" required placeholder="Enter username or email"
+                            name="login" value="<%= locals.formData ? formData.login : "" %>">
+                    </div>
+
+                    <div class="input-block">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Enter password">
+                    </div>
+
+                    <div class="input-block input-block-check">
+                        <input type="checkbox" id="show-password">
+                        <label for="show-password">Show password</label>
+                    </div>
+
+                    <div class="input-btn-block">
+                        <button type="submit" class="input-btn btn-submit">Sign in</button>
+                        <p>
+                            Don't have account?
+                            <a href="/user/sign-up">Sign up</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <%- include('../partials/footer') %>
+    </div>
+
+    <script src="/js/user/sign-in.js"></script>
+</body>
+</html>

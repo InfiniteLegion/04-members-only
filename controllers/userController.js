@@ -1,3 +1,4 @@
+require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const db = require("../db/queries/userQueries.js");
 const passport = require("../config/passport.js");
@@ -76,4 +77,39 @@ const logOut = (req, res, next) => {
   });
 };
 
-module.exports = { getSignIn, getSignUp, addUser, logIn, logOut };
+const getMembership = async (req, res) => {
+  try {
+    res.locals.currentUser
+      ? res.render("membership/index")
+      : res.redirect("/user/sign-in");
+  } catch (error) {
+    res.status(500).send(`Internal server error. ${error.message}`);
+  }
+};
+
+const updateUserMember = async (req, res) => {
+  const { secret } = req.body;
+
+  try {
+    if (secret === process.env.SECRET_PASS_CODE) {
+      await db.updateUserMember(req.body.id);
+      res.redirect("/");
+    } else {
+      return res.render("membership/index", {
+        error: "Secret password incorrect",
+      });
+    }
+  } catch (error) {
+    res.status(500).send(`Internal server error. ${error.message}`);
+  }
+};
+
+module.exports = {
+  getSignIn,
+  getSignUp,
+  addUser,
+  logIn,
+  logOut,
+  getMembership,
+  updateUserMember,
+};

@@ -6,6 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
     <title>Home</title>
 </head>
 <body>
@@ -13,7 +14,66 @@
         <%- include('./partials/navbar') %>
 
         <div class="content-wrapper">
-            <h1>Hello, <%= locals.currentUser ? currentUser.username : "Guest" %></h1>
+<!--            <h1>Hello, <%= locals.currentUser ? currentUser.username : "Guest" %></h1>-->
+                <div class="messages-wrapper">
+                    <div class="messages-block">
+                        <div class="messages">
+                            <% if (!locals.messages || locals.messages.length === 0) { %>
+                                <h1>No messages here! You might be first</h1>
+                            <% } else {
+                              locals.messages.forEach((message) => { %>
+                                <div class="message">
+                                    <div class="message-details">
+                                        <% if (locals.currentUser && locals.currentUser.isAdmin) { %>
+                                            <div class="admin-ctrl-block">
+                                                <form action="/messages/delete" method="post">
+                                                    <input type="hidden" name="id" value="<%= message.id %>">
+
+                                                    <i class="mdi mdi-delete icon-delete msg-ctrl-icon" title="Delete">
+                                                        <button type="submit" class="msg-ctrl-btn"></button>
+                                                    </i>
+                                                </form>
+                                            </div>
+                                        <% } %>
+
+                                        <p class="message-date">[<%= message.date %>]</p>
+
+                                        <p class="message-author">
+                                            <% if (!locals.currentUser || !locals.currentUser.isMember) { %>
+                                                Guest_66
+                                            <% } else { %>
+                                                <%= message.user.username %>
+                                            <% } %>
+                                        </p>
+                                    </div>
+
+                                    <p class="message-title"><%= message.title %></p>
+
+                                    <p class="message-text"><%= message.text %></p>
+                                </div>
+                            <% })} %>
+                        </div>
+
+                        <div class="messages-input-block">
+                            <% if (!locals.currentUser) { %>
+                                <h3>
+                                    <a href="/user/sign-in">Sign in</a> to send messages
+                                </h3>
+                            <% } else { %>
+                                <form action="/messages/new" method="post">
+                                    <input type="hidden" name="user_id" value="<%= locals.currentUser.id %>">
+
+                                    <input type="text" name="title" maxlength="50" placeholder="Message title" required>
+
+                                    <div>
+                                        <textarea name="text" id="" rows="3" required></textarea>
+                                        <button class="input-btn btn-submit" type="submit">Send</button>
+                                    </div>
+                                </form>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
         </div>
 
         <%- include('./partials/footer') %>

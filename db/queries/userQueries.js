@@ -27,8 +27,14 @@ const getUser = async (login, password) => {
   return rows;
 };
 
+const getUserById = async (id) => {
+  const { rows } = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+
+  return rows[0];
+};
+
 const updateUserMember = async (id) => {
   await pool.query('UPDATE users SET "isMember" = true WHERE id = $1', [id]);
 };
 
-module.exports = { addUser, getUser, updateUserMember };
+module.exports = { addUser, getUser, updateUserMember, getUserById };

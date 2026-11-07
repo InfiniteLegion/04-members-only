@@ -3,6 +3,7 @@ const path = require("node:path");
 const express = require("express");
 const indexRouter = require("./routes/indexRouter.js");
 const userRouter = require("./routes/userRouter.js");
+const messageRouter = require("./routes/messageRoutes.js");
 const session = require("express-session");
 const passport = require("passport");
 
@@ -19,6 +20,9 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      maxAge: 3600000,
+    },
   }),
 );
 app.use(passport.session());
@@ -29,6 +33,7 @@ app.use((req, res, next) => {
 
 app.use("/", indexRouter);
 app.use("/user", userRouter);
+app.use("/messages", messageRouter);
 
 const PORT = 3000;
 
